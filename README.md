@@ -10,6 +10,7 @@
 4. [Getting Started](#getting_started)
 5. [Usage](#usage)
 6. [Built Using](#built_using)
+7. [Note](#note)
 
 <h2 id="about">🧐 About</h2>
 
@@ -76,3 +77,7 @@ To use this script,
 1. [OpenAI API](https://platform.openai.com/docs/api-reference) - For generating video content.
 2. [gTTS](https://gtts.readthedocs.io/en/latest/) - For Text-to-Speech.
 3. [MoviePY](https://zulko.github.io/moviepy/) - For video editing.
+
+<h2 id="note">🗒️ Note</h2>
+
+Note that this script is very basic as of now and does not generate any graphics like images or even subtitles. These are some things that I **MAY** add in the future. If you want to contribute, you are free to do so and you may even fork and improve this repository.
