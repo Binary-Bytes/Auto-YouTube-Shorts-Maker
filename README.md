@@ -1,0 +1,78 @@
+# Auto Youtube-Shorts
+
+🤖 Automatically generate YouTube shorts simply by running the script!
+
+## 📝 Table of Contents
+
+1. [About](#about)
+2. [Demo](#demo)
+3. [How it works](#working)
+4. [Getting Started](#getting_started)
+5. [Usage](#usage)
+6. [Built Using](#built_using)
+
+<h2 id="about">🧐 About</h2>
+
+From creation to editing and voiceover too for a YouTube short, this script automates it all. No more tedious tasks, endless hours, this script has you covered!
+
+Absolutely free!
+
+<h2 id="demo">🎥 Demo</h2>
+
+![Working](./demo/Demo.mp4)
+
+- ***NOTE : This video is trimmed but it shouldn't take more than 1 minute to generate your video.***
+
+<h2 id="working">💭 How it works</h2>
+
+<h4>#1 Content</h4>
+The script starts by taking video name and asking if the user wants to generate content using AI (which can be edited later).
+
+<h4>#2 Text-to-Speech</h4>
+After the content is generates / entered by the user, it generated Text-to-Speech and saves the file as `speech.mp3`.
+
+<h4>#3 Editing</h4>
+The editing starts by selecting a random gameplay, trimming a random part of it and adding speech on top of it. Next, it resizes the video to 9:16 aspect ratio and saves the final video.
+
+<h2 id="getting_started">🏁 Getting Started</h2>
+
+Follow the instructions given below to get this script up and running on your device.
+
+<h4>Prerequisites</h4>
+
+1. **OpenAI API Key -** Get it from the [Open AI Website](https://platform.openai.com/account/api-keys). It provides $18 of free credits by default and they are more than enough.
+2. **OpenAI -** `pip install openai`
+3. **gTTS -** `pip install gtts`
+4. **MoviePY -** `pip install moviepy`
+5. **Dotenv -** `pip install python-dotenv`
+
+<h4>Installing</h4>
+
+1. Download this repository as zip file / using git.
+2. Open the folder.
+3. Make sure the above mentioned modules are installed.
+4. Add your OpenAI API key to `.env.example` file (`OPENAI_API=<key>`) and rename it to just `.env` **[OPTIONAL]**
+5. Run the python file.
+
+<h2 id="usage">🎈 Usage</h2>
+
+To use this script,
+
+1. Run the `main.py` python file.
+2. Enter the name of the video.
+3. Let AI generate video content for you / enter it yourself.
+
+- ***NOTE : (Make sure you have added your OpenAI API key in `.env` file if using AI to generate content)***
+
+4. And that's it! Everything else will be handled automatically!
+5. You can find your video in `generated/` directory.
+
+---
+
+`<sup>`Beep boop, boop beep. I am a script. If there are any issues, contact my [Creator](https://github.com/Binary-Bytes) - BedrockGranny#8331 (Discord)`</sup>`
+
+<h2 id="built_using">⛏️ Built Using</h2>
+
+1. [OpenAI API](https://platform.openai.com/docs/api-reference) - For generating video content.
+2. [gTTS](https://gtts.readthedocs.io/en/latest/) - For Text-to-Speech.
+3. [MoviePY](https://zulko.github.io/moviepy/) - For video editing.
