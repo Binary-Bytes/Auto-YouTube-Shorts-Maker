@@ -27,13 +27,13 @@ Absolutely free!
 <h2 id="working">💭 How it works</h2>
 
 <h4>#1 Content</h4>
-The script starts by taking video name and asking if the user wants to generate content using AI (which can be edited later).
+The script starts by taking the video name and asking if the user wants to generate content using AI (which can be edited later).
 
 <h4>#2 Text-to-Speech</h4>
-After the content is generates / entered by the user, it generated Text-to-Speech and saves the file as `speech.mp3`.
+After the content is generated / entered by the user, it generates Text-to-Speech and saves the file as `speech.mp3`.
 
 <h4>#3 Editing</h4>
-The editing starts by selecting a random gameplay, trimming a random part of it and adding speech on top of it. Next, it resizes the video to 9:16 aspect ratio and saves the final video.
+The editing starts by selecting a gameplay, trimming a random part of it and adding speech on top of it. Next, it resizes the video to 9:16 aspect ratio and saves the final video.
 
 <h2 id="getting_started">🏁 Getting Started</h2>
 
@@ -41,7 +41,7 @@ Follow the instructions given below to get this script up and running on your de
 
 <h4>Prerequisites</h4>
 
-1. **OpenAI API Key -** Get it from the [Open AI Website](https://platform.openai.com/account/api-keys). It provides $18 of free credits by default and they are more than enough.
+1. **OpenAI API Key -** Get it from the [Open AI Website](https://platform.openai.com/account/api-keys). It provides $18 of free credits by default and they are more than enough. **[OPTIONAL]**
 2. **OpenAI -** `pip install openai`
 3. **gTTS -** `pip install gtts`
 4. **MoviePY -** `pip install moviepy`
