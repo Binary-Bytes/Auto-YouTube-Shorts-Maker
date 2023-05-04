@@ -19,7 +19,7 @@ Absolutely free!
 
 <h2 id="demo">🎥 Demo</h2>
 
-![Working](./demo/Demo.mp4)
+![Working](https://user-images.githubusercontent.com/88529771/236298905-5abe9905-f6ef-4cfb-859e-2c663ae2025a.mp4)
 
 - ***NOTE : This video is trimmed but it shouldn't take more than 1 minute to generate your video.***
 
