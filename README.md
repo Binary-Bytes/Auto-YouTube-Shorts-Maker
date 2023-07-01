@@ -53,13 +53,14 @@ Follow the instructions given below to get this script up and running on your de
 2. Open the folder.
 3. Make sure the above mentioned modules are installed.
 4. Add your OpenAI API key to `.env.example` file (`OPENAI_API=<key>`) and rename it to just `.env` **[OPTIONAL]**
-5. Run the python file.
+5. Now, download the gameplay folder from [Google Drive](https://drive.google.com/drive/folders/1qToyKgKDLOPgoMj_EMhA6qusV4xCr4Sb?usp=sharing) (as it was too large to upload to Github)
+6. Run the python file.
 
 <h2 id="usage">🎈 Usage</h2>
 
 To use this script,
 
-1. Run the `main.py` python file.
+1. Run the `shorts.py` python file.
 2. Enter the name of the video.
 3. Let AI generate video content for you / enter it yourself.
 
