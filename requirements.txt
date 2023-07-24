@@ -1,5 +1,5 @@
-dotenv==0.18.0
+python-dotenv==1.0.0
 random2==1.0.1
-openai==0.28.0
+openai==0.27.8
 gtts==2.2.3
 moviepy==1.0.3

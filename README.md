@@ -18,8 +18,6 @@ From creation to editing and voiceover too for a YouTube short, this script auto
 
 Absolutely free!
 
-*Quick note, I'd be happy if someone could make a `requirements.txt` file with requirements and make a pull request.*
-
 <h2 id="demo">🎥 Demo</h2>
 
 ![Working](https://user-images.githubusercontent.com/88529771/236298905-5abe9905-f6ef-4cfb-859e-2c663ae2025a.mp4)
@@ -53,7 +51,7 @@ Follow the instructions given below to get this script up and running on your de
 
 1. Download this repository as zip file / using git.
 2. Open the folder.
-3. Make sure the above mentioned modules are installed.
+3. Make sure the above mentioned modules are installed. (`pip install -r requirements.txt`)
 4. Add your OpenAI API key to `.env.example` file (`OPENAI_API=<key>`) and rename it to just `.env` **[OPTIONAL]**
 5. Now, download both the gameplay videos from [Google Drive](https://drive.google.com/drive/folders/1qToyKgKDLOPgoMj_EMhA6qusV4xCr4Sb?usp=sharing) (as they were too large to upload to Github)
 6. Put both the videos in a folder named "`gameplay`" in the directory with `shorts.py` file.
@@ -74,7 +72,7 @@ To use this script,
 
 ---
 
-`<sup>`Beep boop, boop beep. I am a script. If there are any issues, contact my [Creator](https://github.com/Binary-Bytes) - BedrockGranny#8331 `and/or` bedrockgranny on Discord`</sup>`
+`<sup>`Beep boop, boop beep. I am a script. If there are any issues, contact my [Creator](https://github.com/Binary-Bytes) - BedrockGranny#8331 `and/or` bedrockgranny on Discord `</sup>`
 
 <h2 id="built_using">⛏️ Built Using</h2>
 
