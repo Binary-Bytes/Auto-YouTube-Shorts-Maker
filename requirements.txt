@@ -1,0 +1,5 @@
+dotenv==0.18.0
+random2==1.0.1
+openai==0.28.0
+gtts==2.2.3
+moviepy==1.0.3
