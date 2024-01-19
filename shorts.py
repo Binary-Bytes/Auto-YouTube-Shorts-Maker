@@ -2,7 +2,9 @@
 from dotenv import load_dotenv
 import random
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ["OPENAI_API"])
 from gtts import gTTS
 from moviepy.editor import *
 import moviepy.video.fx.crop as crop_vid
@@ -17,16 +19,13 @@ if option == 'yes':
     theme = input("\nEnter the theme of the video >  ")
 
     ### MAKE .env FILE AND SAVE YOUR API KEY ###
-    openai.api_key = os.environ["OPENAI_API"]
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=f"Generate content on - \"{theme}\"",
-        temperature=0.7,
-        max_tokens=200,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
+    response = client.completions.create(engine="text-davinci-003",
+    prompt=f"Generate content on - \"{theme}\"",
+    temperature=0.7,
+    max_tokens=200,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0)
     print(response.choices[0].text)
 
     yes_no = input('\nIs this fine? (yes/no) >  ')
