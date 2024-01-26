@@ -19,7 +19,7 @@ if option == 'yes':
     ### MAKE .env FILE AND SAVE YOUR API KEY ###
     openai.api_key = os.environ["OPENAI_API"]
     response = openai.Completion.create(
-        engine="text-davinci-003",
+        engine="gpt-3.5-turbo-instruct",
         prompt=f"Generate content on - \"{theme}\"",
         temperature=0.7,
         max_tokens=200,
