@@ -46,6 +46,7 @@ Follow the instructions given below to get this script up and running on your de
 3. **gTTS -** `pip install gtts`
 4. **MoviePY -** `pip install moviepy`
 5. **Dotenv -** `pip install python-dotenv`
+6. **FFmpeg -** `brew install ffmpeg`
 
 <h4>Installing</h4>
 
