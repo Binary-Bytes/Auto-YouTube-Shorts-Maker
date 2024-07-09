@@ -20,7 +20,7 @@ if option == 'yes':
     openai.api_key = os.environ["OPENAI_API"]
     response = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",
-        prompt=f"Generate content on - \"{theme}\"",
+        prompt=f"Act as an Script Writer who writes engaging and professional scripts for short videos. you never do a grammartical mistake and write very engaging scripts that touches the viewrs attension. At the beginning of the video you never forget to add a viral hook that will catch the viewers attension and will break the scroll. Your scripts are so loved by users that the subscribe and follow the channel. Dont mention any channels name but at appropriate point tell the viewer to like the video and follo or subscribe the channel or account. Now Generate content on - \"{theme}\"",
         temperature=0.7,
         max_tokens=200,
         top_p=1,
