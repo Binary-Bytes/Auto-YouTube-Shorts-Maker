@@ -1,83 +1,180 @@
-# Import everything
-from dotenv import load_dotenv
-import random
 import os
-import openai
-from gtts import gTTS
-from moviepy.editor import *
+import re
+import random
+import urllib.parse
+import requests
+import unicodedata
+import glob
+from moviepy.editor import VideoFileClip, AudioFileClip
 import moviepy.video.fx.crop as crop_vid
-load_dotenv()
 
-# Ask for video info
-title = input("\nEnter the name of the video >  ")
-option = input('Do you want AI to generate content? (yes/no) >  ')
 
-if option == 'yes':
-    # Generate content using OpenAI API
-    theme = input("\nEnter the theme of the video >  ")
+# -------------------------- CONFIGS --------------------------
+TEMPLATE_FOLDER = "templates"
+OUTPUT_FOLDER = "generated"
+GAMEPLAY_PATTERN = os.path.join(TEMPLATE_FOLDER, "short_*.mp4")
 
-    ### MAKE .env FILE AND SAVE YOUR API KEY ###
-    openai.api_key = os.environ["OPENAI_API"]
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",
-        prompt=f"Act as an script writer who writes engaging and professional scripts for tiktok shorts. you never do a grammatical mistake and write very engaging scripts that touches the viewers' attention. At the beginning of the video you never forget to add a viral hook that will catch the viewers attention and will break the scroll. Your scripts are so loved by users that they subscribe and follow the channel. Don't mention any channel's name but at appropriate point tell the viewer to like the video and follow or subscribe the channel or account. (Remember tiktok shorts have max limit of 1 min). Now Generate content on - \"{theme}\"",
-        temperature=0.7,
-        max_tokens=200,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-    print(response.choices[0].text)
 
-    yes_no = input('\nIs this fine? (yes/no) >  ')
-    if yes_no == 'yes':
-        content = response.choices[0].text
+# -------------------- CLEANUP FUNCTION --------------------
+def clean_script(text):
+    # Remove [directions]
+    text = re.sub(r"\[.*?\]", "", text)
+    # Remove 'Voiceover' / 'Narrator' / tone indicators
+    text = re.sub(r"^\s*(Voiceover|Narrator)?\s*\(?.*?\)?:\s*", "", text, flags=re.IGNORECASE | re.MULTILINE)
+    text = re.sub(r"^\s*(Voiceover|Narrator)\s*[-:]?\s*", "", text, flags=re.IGNORECASE | re.MULTILINE)
+    # Remove asterisks
+    text = text.replace("*", "")
+    # Normalize quotes and other characters
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    # Strip extra whitespace
+    return ' '.join(text.strip().split())
+
+
+# ------------------ TEXT TO SPEECH WITH SCRIPT GENERATION -------------------
+def generate_short_title(topic):
+    # Remove common words and keep it concise
+    words = topic.split()
+    # Keep first 2-3 words, remove stop words
+    stop_words = {'the', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'of', 'with'}
+    title_words = [word for word in words if word.lower() not in stop_words][:3]
+    # Capitalize and join
+    return '_'.join(word.capitalize() for word in title_words)[:30]
+
+def synthesize_speech_post(topic, out_path):
+    # Clean and prepare the topic
+    cleaned_topic = clean_script(topic)
+
+    prompt = (
+    f"Create an engaging 30-second educational short about {topic}. "
+    "Make it informative, concise, and captivating. Explain the topic in a way that grabs the viewer's attention, "
+    "uses clear language, and provides valuable insights. The goal is to educate and entertain simultaneously."
+    ) + cleaned_topic
+
+    # Encode the text for the URL
+    encoded_text = urllib.parse.quote(prompt)
+    url = f"https://text.pollinations.ai/{encoded_text}?model=openai-audio&voice=onyx"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # Check if the response is an audio file
+        if 'audio/mpeg' in response.headers.get('Content-Type', ''):
+            with open(out_path, 'wb') as f:
+                f.write(response.content)
+            print(f"Audio saved successfully as {out_path}")
+            
+            # Try to extract script from response text
+            script = clean_script(response.text.strip()) if response.text else "No script generated."
+            return script
+        else:
+            print("Error: Expected audio response, received:")
+            print(f"Content-Type: {response.headers.get('Content-Type')}")
+            print(response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Error making TTS request: {e}")
+        return None
+
+
+# -------------- SELECT RANDOM GAMEPLAY ----------------
+def get_random_gameplay_clip(duration_limit):
+    gameplay_files = glob.glob(GAMEPLAY_PATTERN)
+    if not gameplay_files:
+        raise FileNotFoundError("No gameplay templates found in 'templates/'")
+    selected = random.choice(gameplay_files)
+    clip = VideoFileClip(selected)
+    return clip
+
+
+# -------------- RESIZE TO 9:16 FORMAT ----------------
+def resize_to_9_16(clip):
+    w, h = clip.size
+    target_ratio = 1080 / 1920
+    if w / h > target_ratio:
+        new_width = int(h * target_ratio)
+        return crop_vid.crop(clip, width=new_width, height=h, x_center=w / 2, y_center=h / 2)
     else:
-        content = input('\nEnter >  ')
-else:
-    content = input('\nEnter the content of the video >  ')
+        new_height = int(w / target_ratio)
+        return crop_vid.crop(clip, width=w, height=new_height, x_center=w / 2, y_center=h / 2)
 
-# Create the directory
-if os.path.exists('generated') == False:
-    os.mkdir('generated')
 
-# Generate speech for the video
-speech = gTTS(text=content, lang='en', tld='ca', slow=False)
-speech.save("generated/speech.mp3")
+# --------------- COMBINE AUDIO & VIDEO ----------------
+def combine_clips(video_clip, audio_path):
+    audio = AudioFileClip(audio_path)
+    
+    # If video_clip is None, we need to handle longer audio by combining multiple gameplay clips
+    if video_clip is None:
+        # For longer audio, stitch together multiple gameplay clips
+        total_duration = audio.duration
+        combined_clips = []
+        remaining_duration = total_duration
+        
+        while remaining_duration > 0:
+            # Get a clip for each segment (up to 30s each)
+            segment_duration = min(remaining_duration, 30.0)
+            segment_clip = get_random_gameplay_clip(segment_duration)
+            segment_clip = segment_clip.set_duration(segment_duration)
+            combined_clips.append(segment_clip)
+            remaining_duration -= segment_duration
+        
+        # Concatenate all clips
+        from moviepy.editor import concatenate_videoclips
+        video_clip = concatenate_videoclips(combined_clips)
+    else:
+        # If audio is longer than video, extend video to audio's duration
+        if audio.duration > video_clip.duration:
+            video_clip = video_clip.set_duration(audio.duration)
 
-gp = random.choice(["1", "2"])
-start_point = random.randint(1, 480)
-audio_clip = AudioFileClip("generated/speech.mp3")
+    # Set the final duration
+    duration = min(audio.duration, video_clip.duration)
+    
+    trimmed_video = video_clip.subclip(0, duration)
+    trimmed_audio = audio.subclip(0, duration)
+    return trimmed_video.set_audio(trimmed_audio), duration
 
-if (audio_clip.duration + 1.3 > 58):
-    print('\nSpeech too long!\n' + str(audio_clip.duration) + ' seconds\n' + str(audio_clip.duration + 1.3) + ' total')
-    exit()
 
-print('\n')
+# ---------------------- MAIN ------------------------
+if __name__ == "__main__":
+    if not os.path.exists(OUTPUT_FOLDER):
+        os.makedirs(OUTPUT_FOLDER)
 
-### VIDEO EDITING ###
+    topic = input("🎯 Enter topic for your short: ").strip()
+    print("Generating Video : ")
+    # Create speech and generate script via Pollinations API
+    speech_path = os.path.join(OUTPUT_FOLDER, "speech.mp3")
+    script = synthesize_speech_post(topic, speech_path)
 
-# Trim a random part of minecraft gameplay and slap audio on it
-video_clip = VideoFileClip("gameplay/gameplay_" + gp + ".mp4").subclip(start_point, start_point + audio_clip.duration + 1.3)
-final_clip = video_clip.set_audio(audio_clip)
+    if script is None:
+        # Fallback to manual script input if API fails
+        script = clean_script(input("✍️ Enter your script manually: ").strip())
+        title = input("🎬 Enter video title: ").strip().replace(" ", "_")
+    else:
+        # Use the auto-generated title
+        title = generate_short_title(topic)
 
-# Resize the video to 9:16 ratio
-w, h = final_clip.size
-target_ratio = 1080 / 1920
-current_ratio = w / h
-
-if current_ratio > target_ratio:
-    # The video is wider than the desired aspect ratio, crop the width
-    new_width = int(h * target_ratio)
-    x_center = w / 2
-    y_center = h / 2
-    final_clip = crop_vid.crop(final_clip, width=new_width, height=h, x_center=x_center, y_center=y_center)
-else:
-    # The video is taller than the desired aspect ratio, crop the height
-    new_height = int(w / target_ratio)
-    x_center = w / 2
-    y_center = h / 2
-    final_clip = crop_vid.crop(final_clip, width=w, height=new_height, x_center=x_center, y_center=y_center)
-
-# Write the final video
-final_clip.write_videofile("generated/" + title + ".mp4", codec='libx264', audio_codec='aac', temp_audiofile='temp-audio.m4a', remove_temp=True)
+    try:
+        # Load speech to determine exact duration
+        speech_audio = AudioFileClip(speech_path)
+        
+        # For audio <= 30 seconds, use original logic
+        if speech_audio.duration <= 30.0:
+            gameplay_clip = get_random_gameplay_clip(speech_audio.duration + 1.3)
+        else:
+            # For longer audio, just pass None as video_clip
+            gameplay_clip = None
+            print(f"\n⚠️ Audio duration: {speech_audio.duration:.1f}s - Will combine multiple gameplay clips")
+        
+        # Combine clips (function will handle long audio appropriately)
+        final_clip, actual_duration = combine_clips(gameplay_clip, speech_path)
+        final_clip = resize_to_9_16(final_clip)
+        
+        # Output
+        output_file = os.path.join(OUTPUT_FOLDER, f"{title}.mp4")
+        final_clip.write_videofile(output_file, codec='libx264', audio_codec='aac',
+                                   temp_audiofile='temp-audio.m4a', remove_temp=True)
+        
+        print(f"\n✅ DONE. Video saved as: {output_file}")
+        print(f"   Final duration: {actual_duration:.1f} seconds")
+    except Exception as e:
+        print(f"💥 ERROR: {e}")

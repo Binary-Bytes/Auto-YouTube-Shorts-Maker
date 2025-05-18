@@ -348,3 +348,5 @@ pyrightconfig.json
 test.py
 generated/
 .idea/
+env
+.vscode

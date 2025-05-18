@@ -1,76 +1,126 @@
-# Auto Youtube Shorts Maker
+# 🎥 Auto YouTube Shorts Maker
 
-🤖 Automatically generate YouTube shorts simply by running the script!
+## 🚀 Project Overview
 
-## Description
-From creation to editing and voiceover too, this script automates it all for a YouTube short. No more tedious tasks or endless hours, this script has you covered! And the best part? It's absolutely free!
+Automatically generate engaging 30-second educational YouTube Shorts using AI-powered script generation, text-to-speech, and dynamic gameplay footage.
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Demo](#demo)
-- [How it Works](#how-it-works)
-- [Contributing](#contributing)
-- [License](#license)
-- [Built Using](#built-using)
+## ✨ Key Features
 
-## Installation
+- 🤖 AI-Driven Content Generation
+- 🎙️ Automatic Text-to-Speech
+- 🎮 Dynamic Video Composition
+- 📱 Optimized Vertical Video Format
 
-### Prerequisites
-1. **OpenAI API Key -** Get it from the [Open AI Website](https://platform.openai.com/account/api-keys). It provides $18 of free credits by default and they are more than enough. **[OPTIONAL]**
-2. **OpenAI -** `pip install openai`
-3. **gTTS -** `pip install gtts`
-4. **MoviePY -** `pip install moviepy`
-5. **Dotenv -** `pip install python-dotenv`
+## 🛠️ Prerequisites
 
-### Installing
-1. Download this repository as a zip file or clone it using git.
-2. Open the folder.
-3. Make sure the above-mentioned modules are installed: `pip install -r requirements.txt`
-4. Add your OpenAI API key to the `.env.example` file (`OPENAI_API=<key>`) and rename it to `.env` **[OPTIONAL]**
-5. Download both gameplay videos from [Google Drive](https://drive.google.com/drive/folders/1qToyKgKDLOPgoMj_EMhA6qusV4xCr4Sb?usp=sharing) (as they were too large to upload to GitHub)
-6. Put both videos in a folder named "`gameplay`" in the directory with the `shorts.py` file.
-7. Run the `shorts.py` Python file.
+- Python 3.8+
+- FFmpeg
+- Internet Connection
 
-## Usage
+## 📦 Quick Start
 
-To use this script:
-1. Run the `shorts.py` Python file.
-2. Enter the name of the video.
-3. Let AI generate video content for you or enter it yourself.
-   - ***NOTE : (Make sure you have added your OpenAI API key in the `.env` file if using AI to generate content)***
-4. And that's it! Everything else will be handled automatically!
-5. You can find your video in the `generated/` directory.
+1. Clone the repository:
+```bash
+git clone https://github.com/Ravsalt/Auto-YouTube-Shorts-Maker.git
+cd Auto-YouTube-Shorts-Maker
+```
 
-## Demo
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-[Click Here To See The Demo Video](https://github.com/Binary-Bytes/Auto-YouTube-Shorts-Maker/blob/master/demo/Demo.mp4)
+3. Prepare Templates:
+- Create `templates/` directory
+- Add gameplay clips (`short_*.mp4`)
+- Create `generated/` output directory
 
-- ***NOTE : This video is trimmed but it shouldn't take more than 1 minute to generate your video.***
+## 🎬 Workflow
 
-## How it Works
+### 1. Topic Input
+- Enter educational topic
+- AI generates concise 30-second script
 
-### 1. Content
-The script starts by taking the video name and asking if the user wants to generate content using AI (which can be edited later).
+### 2. Script Generation
+- Transforms topic into engaging narrative
+- Focuses on clarity and insight
+- Creates natural educational content
 
-### 2. Text-to-Speech
-After the content is generated/entered by the user, it generates Text-to-Speech and saves the file as `speech.mp3`.
+### 3. Video Composition
+- Randomly selects gameplay clip
+- Synchronizes audio and video
+- Resizes to vertical format
 
-### 3. Editing
-The editing starts by selecting a gameplay, trimming a random part of it, and adding speech on top of it. Next, it resizes the video to a 9:16 aspect ratio and saves the final video.
+### 4. Output
+- Saves video in `generated/`
+- Filename based on input topic
+
+## 🔧 Customization
+
+- Modify `TEMPLATE_FOLDER` for clip sources
+- Adjust `OUTPUT_FOLDER` for exports
+
+## 🔮 Roadmap
+
+- [ ] Multi-language support
+- [ ] Custom voice options
+- [ ] Enhanced clip selection
+- [ ] YouTube upload automation
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
+
+## 🐛 Troubleshooting
+
+- Verify FFmpeg installation
+- Check internet connectivity
+- Validate gameplay clip formats
+
+
+
+### 1. Topic Selection
+- Prompt user to enter an educational topic
+- Topic serves as the foundation for content generation
+
+### 2. Intelligent Script Creation
+- AI-powered script generation using Pollinations API
+- Transforms topic into concise, engaging 30-second narrative
+- Focuses on clear, informative content
+- Handles fallback to manual script input if API fails
+
+### 3. Multimedia Composition
+- **Audio Generation**: 
+  - Converts script to natural text-to-speech
+  - Creates MP3 voiceover
+
+- **Video Integration**:
+  - Randomly selects gameplay clip from `templates/`
+  - Synchronizes audio with full video clip
+  - Resizes to 9:16 vertical format
+
+### 4. Content Optimization
+- Ensures video duration matches audio length
+- Generates title based on input topic
+- Saves final video in `generated/` directory
+
 
 ## Contributing
 
-Note that this script is very basic as of now and does not generate any graphics like images or even subtitles. These are some things that may be added in the future. If you want to contribute, you are free to do so. Feel free to fork and improve this repository.
+This script is a work in progress. Contributions are welcome! Feel free to fork the repository, make improvements, and submit a pull request.
+Potential future enhancements:
+*   Adding subtitles.
+*   More sophisticated video editing options.
+*   Support for different TTS voices or services.
 
-Due to school, exams, and other real-life commitments, I don't get much time to work on this project. When I do, I would like to add the above-mentioned features. Maybe even a Reddit video maker, but I'm not sure yet.
 
-## License
-
-<sup>`Beep boop, boop beep. I am a script. If there are any issues, contact my [Creator](https://github.com/Binary-Bytes) - BedrockGranny#8331 or bedrockgranny on Discord.`</sup>
 
 ## Built Using
 
-1. [OpenAI API](https://platform.openai.com/docs/api-reference) - For generating video content.
-2. [gTTS](https://gtts.readthedocs.io/en/latest/) - For Text-to-Speech.
-3. [MoviePY](https://zulko.github.io/moviepy/) - For video editing.
+1.  **Pollinations AI** - For text-to-speech and script generation assistance.
+2.  **MoviePy** - For video editing.
+3.  **Requests** - For making HTTP requests to the API.
