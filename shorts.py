@@ -27,6 +27,8 @@ if option == 'yes':
         frequency_penalty=0,
         presence_penalty=0
     )
+    if not response.choices:
+        raise ValueError("LLM returned empty choices list")
     print(response.choices[0].text)
 
     yes_no = input('\nIs this fine? (yes/no) >  ')
